@@ -83,7 +83,7 @@ public class KoreanAnalyzer extends StopwordAnalyzerBase {
     
     return new TokenStreamComponents(src, tok) {
       @Override
-      protected void setReader(final Reader reader) throws IOException {
+      protected void setReader(final Reader reader)  {
         super.setReader(reader);
       }
     };
