@@ -34,7 +34,9 @@ public class MorphemeAttributeImpl extends AttributeImpl implements MorphemeAttr
 	@Override
 	public void reflectWith(AttributeReflector reflector) {
 		// TODO Auto-generated method stub
+		if(this.getToken()==null) return;
+		
 		reflector.reflect(CharTermAttribute.class, "term", this.getToken().getTerm());
-	     reflector.reflect(PositionIncrementAttribute.class, "positionIncrement", this.getToken().getPosInc());
+	    reflector.reflect(PositionIncrementAttribute.class, "positionIncrement", this.getToken().getPosInc());
 	}
 }
