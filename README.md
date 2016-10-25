@@ -1,1 +1,1 @@
-# arirang-analyzer-5
+# arirang-analyzer-6.x

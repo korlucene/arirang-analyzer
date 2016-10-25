@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.lucene.analysis.CharacterUtils;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.ko.morph.MorphException;
 import org.apache.lucene.analysis.ko.utils.DictionaryUtil;
@@ -31,7 +32,6 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
-import org.apache.lucene.analysis.util.CharacterUtils;
 import org.apache.lucene.util.AttributeFactory;
 
 public final class KoreanTokenizer extends Tokenizer {
@@ -40,7 +40,9 @@ public final class KoreanTokenizer extends Tokenizer {
     private static final int MAX_WORD_LEN = 255;
     private static final int IO_BUFFER_SIZE = 4096;
 
-    private final CharacterUtils charUtils;
+    //MGK_DEL [
+    //private final CharacterUtils charUtils;
+    //MGK_DEL ]
     private final CharacterUtils.CharacterBuffer ioBuffer = CharacterUtils.newCharacterBuffer(IO_BUFFER_SIZE);
 
     private static Map<Integer,Integer> pairmap = new HashMap<Integer,Integer>();
@@ -70,12 +72,17 @@ public final class KoreanTokenizer extends Tokenizer {
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
     private final TypeAttribute typeAtt = addAttribute(TypeAttribute.class);
     public KoreanTokenizer() {
-        charUtils = CharacterUtils.getInstance();
+    	
+    	//MGK_DEL [
+        //charUtils = CharacterUtils.getInstance();
+        //MGK_DEL ]
     }
 
     public KoreanTokenizer(AttributeFactory factory) {
         super(factory);
-        charUtils = CharacterUtils.getInstance();
+        //MGK_CHG [
+        //charUtils = CharacterUtils.getInstance();
+        //MGK_CHG ]
     }
 
     @Override
@@ -92,7 +99,11 @@ public final class KoreanTokenizer extends Tokenizer {
         while (true) {
             if (bufferIndex >= dataLen) {
                 offset += dataLen;
-                charUtils.fill(ioBuffer, input); // read supplementary char aware with CharacterUtils
+                //MGK_CHG [
+                //charUtils.fill(ioBuffer, input); // read supplementary char aware with CharacterUtils
+                CharacterUtils.fill(ioBuffer, input); // read supplementary char aware with CharacterUtils
+                //MGK_CHG ]
+                
                 if (ioBuffer.getLength() == 0) {
                     dataLen = 0; // so next offset += dataLen won't decrement offset
                     if (length > 0) {
@@ -107,7 +118,10 @@ public final class KoreanTokenizer extends Tokenizer {
             }
 
             // use CharacterUtils here to support < 3.1 UTF-16 code unit behavior if the char based methods are gone
-            final int c = charUtils.codePointAt(ioBuffer.getBuffer(), bufferIndex, ioBuffer.getLength());
+            //MGK_CHG [
+            //final int c = charUtils.codePointAt(ioBuffer.getBuffer(), bufferIndex, ioBuffer.getLength());
+            final int c = Character.codePointAt(ioBuffer.getBuffer(), bufferIndex, ioBuffer.getLength());
+            //MGK_CHG ]
             final int charCount = Character.charCount(c);
             bufferIndex += charCount;
 
@@ -177,8 +191,10 @@ public final class KoreanTokenizer extends Tokenizer {
 	private boolean isDelimitPosition(int length, int c) {
 		if(bufferIndex>=dataLen ||
 				(length==1 && !pairstack.isEmpty() && pairstack.get(0)==c)) return true;
-		
-		int next_c = charUtils.codePointAt(ioBuffer.getBuffer(), bufferIndex, ioBuffer.getLength());
+		//MGK_CHG [
+		//int next_c = charUtils.codePointAt(ioBuffer.getBuffer(), bufferIndex, ioBuffer.getLength());
+		int next_c = Character.codePointAt(ioBuffer.getBuffer(), bufferIndex, ioBuffer.getLength());
+		//MGK_CHG ]
 		if(isTokenChar(next_c)) return false;
 		
 		if(pairstack.size()==0) return true;
@@ -193,7 +209,10 @@ public final class KoreanTokenizer extends Tokenizer {
 		if(next_c!=pairstack.get(0)) return false; // if next character is not close parenthesis
 		
 		for(int i=1;i<size;i++) {
-			next_c = charUtils.codePointAt(ioBuffer.getBuffer(), bufferIndex+i, ioBuffer.getLength());
+			//MGK_CHG [
+			//next_c = charUtils.codePointAt(ioBuffer.getBuffer(), bufferIndex+i, ioBuffer.getLength());
+			next_c = Character.codePointAt(ioBuffer.getBuffer(), bufferIndex+i, ioBuffer.getLength());
+			//MGK_CHG ]
 			if(next_c!=pairstack.get(i)) return true;
 		}
 
@@ -206,7 +225,10 @@ public final class KoreanTokenizer extends Tokenizer {
 			
 			boolean hasParticle = false;
 			for(int i=start;i<end;i++) {
-				int space_c = charUtils.codePointAt(ioBuffer.getBuffer(), i, ioBuffer.getLength());
+				//MGK_CHG [
+				//int space_c = charUtils.codePointAt(ioBuffer.getBuffer(), i, ioBuffer.getLength());
+				int space_c = Character.codePointAt(ioBuffer.getBuffer(), i, ioBuffer.getLength());
+				//MGK_CHG ]
 				
 				if(space_c==32) { // 32 is space ascii code
 					if(i==start)

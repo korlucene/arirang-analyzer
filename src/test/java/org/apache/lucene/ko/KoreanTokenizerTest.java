@@ -18,7 +18,10 @@ public class KoreanTokenizerTest {
 	public void testTokenize() throws Exception {
 		
 		String[] lines = new String[]{
-			"(‘14.8월)의 일환으로 ’15.3.3 상반기중(행복서울대학교 등 활용)"	
+			/* "려갔음이라",
+			"지겠감으로", */
+			"(‘14.8월)의 일환으로 ’15.3.3 상반기중(행복서울대학교 등 활용)"				
+			
 		};
 		
 		KoreanTokenizer tokenizer = new KoreanTokenizer();
