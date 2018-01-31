@@ -1,23 +1,5 @@
 package org.apache.lucene.analysis.ko;
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
@@ -59,6 +41,7 @@ public class KoreanAnalyzer extends StopwordAnalyzerBase {
   private boolean queryMode = false;
   private boolean wordSegment = false;
   private boolean decompound = true;
+  private boolean removePunctuation = false;
   
   public KoreanAnalyzer() {
 	  this(ENGLISH_STOP_WORDS_SET);
@@ -78,7 +61,7 @@ public class KoreanAnalyzer extends StopwordAnalyzerBase {
     tok = new KoreanFilter(tok, bigrammable, hasOrigin, exactMatch, originCNoun, queryMode, decompound);
     if(wordSegment) tok = new WordSegmentFilter(tok, hasOrigin);
     tok = new HanjaMappingFilter(tok);
-    tok = new PunctuationDelimitFilter(tok);
+    if(removePunctuation) tok = new RemovePunctuationFilter(tok);
     tok = new StopFilter(tok, stopwords);
     
     return new TokenStreamComponents(src, tok) {
@@ -141,4 +124,12 @@ public class KoreanAnalyzer extends StopwordAnalyzerBase {
 		this.wordSegment = wordSegment;
 	}
   
+	/**
+	 * 
+	 * @param wordSegment
+	 */
+	public void setRemovePunctuation(boolean remove) {
+		this.removePunctuation = remove;
+	}
+	
 }

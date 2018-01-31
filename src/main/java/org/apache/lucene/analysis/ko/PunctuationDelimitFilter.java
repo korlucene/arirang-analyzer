@@ -15,6 +15,8 @@ import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 /**
  * Created by SooMyung(soomyung.lee@gmail.com) on 2014. 7. 30.
+ * extracting term '고소고발' from '고소/고발'
+ * remove punctuation 
  */
 
 public final class PunctuationDelimitFilter extends TokenFilter {
@@ -73,9 +75,12 @@ public final class PunctuationDelimitFilter extends TokenFilter {
 
         while (input.incrementToken()) {
         	if (keywordAtt.isKeyword() || 
-        			KoreanTokenizer.TYPE_SIMBOL.equals(typeAtt.type())) return true;
-            if(!containPunctuation(termAtt.toString())) return true;
-
+        			KoreanTokenizer.TYPE_SIMBOL.equals(typeAtt.type())) 
+        		return true;
+        	
+            if(!containPunctuation(termAtt.toString())) 
+            	return true;
+            
             splitByPunctuation(termAtt.toString());
 
             if (!outQueue.isEmpty()) {
@@ -91,7 +96,6 @@ public final class PunctuationDelimitFilter extends TokenFilter {
         final Token iw = outQueue.removeFirst();
 
         if (isFirst && !outQueue.isEmpty()) {
-//            termAtt.setEmpty();
             currentState = captureState();
         }
 
@@ -255,6 +259,12 @@ public final class PunctuationDelimitFilter extends TokenFilter {
         @SuppressWarnings("unused")
 		public void setTerm(String term) {
             this.term = term;
+        }
+        
+        public boolean equal(Token another) {
+        	
+        	return (this.offset==another.offset 
+        			&& this.term.equals(another.getTerm()));
         }
     }
 
