@@ -51,6 +51,7 @@ public final class KoreanFilter extends TokenFilter {
 	private final boolean originCNoun;
 	private final boolean queryMode;
 	private final boolean decompound;
+	private final boolean hasVerb;
 
 	private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
 	private final PositionIncrementAttribute posIncrAtt = addAttribute(PositionIncrementAttribute.class);
@@ -87,11 +88,16 @@ public final class KoreanFilter extends TokenFilter {
   
   public KoreanFilter(TokenStream input, boolean bigram, boolean has, boolean exactMatch, 
 		  boolean cnoun, boolean isQuery) {
-	  this(input, bigram, has,exactMatch,cnoun, false, true);
+	  this(input, bigram, has,exactMatch,cnoun, isQuery, true);
   }
   
   public KoreanFilter(TokenStream input, boolean bigram, boolean has, boolean exactMatch, 
 		  boolean cnoun, boolean isQuery, boolean decompound) {
+	  this(input, bigram, has,exactMatch,cnoun, isQuery, decompound, false);
+  }
+  
+  public KoreanFilter(TokenStream input, boolean bigram, boolean has, boolean exactMatch, 
+		  boolean cnoun, boolean isQuery, boolean decompound, boolean hasVerb) {
 	  
     super(input);
     this.bigrammable = bigram;
@@ -101,9 +107,7 @@ public final class KoreanFilter extends TokenFilter {
     this.morph.setExactCompound(exactMatch);
     this.queryMode = isQuery;
     this.decompound = decompound;
-    
-//    if(this.queryMode)
-//    	this.morph.setDivisibleOne(false);
+    this.hasVerb = hasVerb; 
   }
   
   public boolean incrementToken() throws IOException {
@@ -227,7 +231,7 @@ public final class KoreanFilter extends TokenFilter {
 					&& output.getCNounList().size() < 2)
 				break;
 
-			if (output.getPos() == PatternConstants.POS_VERB)
+			if (!hasVerb && output.getPos() == PatternConstants.POS_VERB)
 				continue; // extract keywords from only noun
 
 			if (output.getCNounList().size() > maxDecompounds)

@@ -44,7 +44,7 @@ public final class PunctuationDelimitFilter extends TokenFilter {
      *
      * @param input
      */
-    protected PunctuationDelimitFilter(TokenStream input) {
+    public PunctuationDelimitFilter(TokenStream input) {
         super(input);
     }
 

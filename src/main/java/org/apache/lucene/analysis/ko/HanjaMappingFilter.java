@@ -36,7 +36,7 @@ public final class HanjaMappingFilter extends TokenFilter {
      *
      * @param input
      */
-    protected HanjaMappingFilter(TokenStream input) {
+    public HanjaMappingFilter(TokenStream input) {
         super(input);
         cnAnalyzer.setExactMach(false);
     }

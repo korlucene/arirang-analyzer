@@ -53,6 +53,8 @@ private static final String BIGRAMMABLE_PARAM = "bigrammable";
 
   // Decides whether the original compound noun is returned or not if analyzed morphologically
   private static final String EXACT_MATCH_PARAM = "exactMatch";
+
+  private static final String HAS_VERB = "hasVerb";
   
   private final boolean bigrammable;
 
@@ -66,6 +68,8 @@ private static final String BIGRAMMABLE_PARAM = "bigrammable";
   
   private final boolean decompound;
   
+  private final boolean hasVerb;
+  
   
   /**
    * Initialize this factory via a set of key-value pairs.
@@ -78,12 +82,14 @@ private static final String BIGRAMMABLE_PARAM = "bigrammable";
     hasCNoun = getBoolean(args, HAS_COMPOUND_NOUN_PARAM, true);
     queryMode = getBoolean(args, IS_QUERY_MODE_PARAM, true);
     decompound = getBoolean(args, DECOMPOUND_PARAM, true);
+    hasVerb = getBoolean(args, HAS_VERB, false);
+    
     if (!args.isEmpty()) {
       throw new IllegalArgumentException("Unknown parameters: " + args);
     }
   }
 
   public TokenStream create(TokenStream tokenstream) {
-    return new KoreanFilter(tokenstream, bigrammable, hasOrigin, exactMatch, hasCNoun, queryMode, decompound);
+    return new KoreanFilter(tokenstream, bigrammable, hasOrigin, exactMatch, hasCNoun, queryMode, decompound, hasVerb);
   }
 }

@@ -34,7 +34,7 @@ public class TestKoreanAnalyzer extends TestCase {
 //		input = "되었다";
 		input="홍재룡(洪在龍)이며";
 //		input="[2015/12/12] 일일감리보고서";
-		input="고소/고발";
+		input="총·균·쇠";
 		
 		KoreanAnalyzer a = new KoreanAnalyzer();
 		a.setHasOrigin(false);
@@ -42,6 +42,7 @@ public class TestKoreanAnalyzer extends TestCase {
 		a.setOriginCNoun(true);
 		a.setDecompound(true);
 		a.setRemovePunctuation(true);
+		a.setHasVerb(true);
 		
 		StringBuilder actual = new StringBuilder();
 		

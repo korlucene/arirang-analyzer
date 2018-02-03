@@ -42,6 +42,7 @@ public class KoreanAnalyzer extends StopwordAnalyzerBase {
   private boolean wordSegment = false;
   private boolean decompound = true;
   private boolean removePunctuation = false;
+  private boolean hasVerb = false;
   
   public KoreanAnalyzer() {
 	  this(ENGLISH_STOP_WORDS_SET);
@@ -58,7 +59,7 @@ public class KoreanAnalyzer extends StopwordAnalyzerBase {
     final KoreanTokenizer src = new KoreanTokenizer();
     TokenStream tok = new LowerCaseFilter(src);
     tok = new ClassicFilter(tok);
-    tok = new KoreanFilter(tok, bigrammable, hasOrigin, exactMatch, originCNoun, queryMode, decompound);
+    tok = new KoreanFilter(tok, bigrammable, hasOrigin, exactMatch, originCNoun, queryMode, decompound, hasVerb);
     if(wordSegment) tok = new WordSegmentFilter(tok, hasOrigin);
     tok = new HanjaMappingFilter(tok);
     if(removePunctuation) tok = new RemovePunctuationFilter(tok);
@@ -132,4 +133,7 @@ public class KoreanAnalyzer extends StopwordAnalyzerBase {
 		this.removePunctuation = remove;
 	}
 	
+	public void setHasVerb(boolean has) {
+		this.hasVerb = has;
+	}
 }
