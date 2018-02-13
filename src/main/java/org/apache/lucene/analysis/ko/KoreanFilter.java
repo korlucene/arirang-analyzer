@@ -19,6 +19,8 @@ package org.apache.lucene.analysis.ko;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -185,7 +187,15 @@ public final class KoreanFilter extends TokenFilter {
        kt.setOutputs(outputs);
     }
 
-      morphQueue.addAll(map.values());
+    morphQueue.addAll(map.values());
+      
+    Collections.sort(morphQueue, new Comparator<KoreanToken>() {
+  		@Override
+  		public int compare(KoreanToken o1, KoreanToken o2) {		
+  			return o1.getOffset()-o2.getOffset();
+  		}
+    });
+    
   }
   
   /**

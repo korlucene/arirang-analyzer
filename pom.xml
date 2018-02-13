@@ -17,7 +17,7 @@
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
-    <lucene.version>7.1.0</lucene.version>
+    <lucene.version>7.2.1</lucene.version>
   </properties>  
   <dependencies>
   	<dependency>
@@ -77,5 +77,5 @@
       </plugin> 
     </plugins>
   </build>
- <version>7.1.0</version>
+ <version>7.2.1.1</version>
 </project>
