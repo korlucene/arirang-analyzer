@@ -75,7 +75,7 @@ public final class WordSegmentFilter extends TokenFilter {
         			kToken==null || kToken.getOutputs().size()==0 
         			|| kToken.getOutputs().get(0).getScore()>AnalysisOutput.SCORE_COMPOUNDS ||
         					(kToken.getOutputs().get(0).getScore()==AnalysisOutput.SCORE_COMPOUNDS && 
-        					!(containJosa(kToken) || MorphUtil.hasVerbOnly(kToken.getOutputs().get(0).getStem()))))
+        					!(containJosa(kToken) || MorphUtil.hasVerbSyllableOnly(kToken.getOutputs().get(0).getStem()))))
         		return true;
         	
         	String term = termAtt.toString();

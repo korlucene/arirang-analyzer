@@ -4,9 +4,11 @@ import junit.framework.TestCase;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.ko.KoreanAnalyzer;
+import org.apache.lucene.analysis.ko.utils.DictionaryUtil;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 public class TestKoreanAnalyzer extends TestCase {
 
@@ -34,7 +36,11 @@ public class TestKoreanAnalyzer extends TestCase {
 //		input = "되었다";
 		input="홍재룡(洪在龍)이며";
 //		input="[2015/12/12] 일일감리보고서";
-		input="총·균·쇠";
+		input="해찬들";
+//		input="나는 학교에 다녀왔다 대덕연구개발특구를 방문했다 이현규가 군대에서 근무한다 세종시에서 살다";
+		
+		DictionaryUtil.loadDictionary();
+		
 		
 		KoreanAnalyzer a = new KoreanAnalyzer();
 		a.setHasOrigin(false);
@@ -46,23 +52,33 @@ public class TestKoreanAnalyzer extends TestCase {
 		
 		StringBuilder actual = new StringBuilder();
 		
-	     TokenStream ts = a.tokenStream("bogus", input);
-	     CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
-	     OffsetAttribute offsetAtt = ts.addAttribute(OffsetAttribute.class);
-	     PositionIncrementAttribute posIncrAtt = ts.addAttribute(PositionIncrementAttribute.class);
-	     
-	      ts.reset();
-	      while (ts.incrementToken()) {
-	        if(posIncrAtt.getPositionIncrement()==1) 
-	        	actual.append('\n');
-	        actual.append(termAtt.toString()).append(":"+offsetAtt.startOffset()+","+offsetAtt.endOffset()+"/"+posIncrAtt.getPositionIncrement());
-	        actual.append(' ');
-	      }
-	      System.out.println(actual);
-	     
-//	      assertEquals("for line " + line + " input: " + input, expected, actual.toString());
-	      ts.end();
-	      ts.close();
+		 long start = System.currentTimeMillis();
+		 
+//		 for(int i=0;i<100;i++) {
+		     TokenStream ts = a.tokenStream("bogus", input);
+		     CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
+		     OffsetAttribute offsetAtt = ts.addAttribute(OffsetAttribute.class);
+		     PositionIncrementAttribute posIncrAtt = ts.addAttribute(PositionIncrementAttribute.class);
+		     TypeAttribute typeAtt = ts.addAttribute(TypeAttribute.class);
+		     
+		      ts.reset();
+		      while (ts.incrementToken()) {
+		        if(posIncrAtt.getPositionIncrement()==1) 
+		        	actual.append('\n');
+		        actual.append(termAtt.toString()).append(":"+offsetAtt.startOffset()+","+offsetAtt.endOffset()+"/"+posIncrAtt.getPositionIncrement()+":"+typeAtt.type());
+		        actual.append(' ');
+		      }
+		     
+		     
+//		      assertEquals("for line " + line + " input: " + input, expected, actual.toString());
+		      ts.end();
+		      ts.close(); 
+//		 }
+		      System.out.println(actual);
+		     
+	      long end = System.currentTimeMillis();
+	      
+	      System.out.println((end-start)+"ms");
 	}
 	
 	public void testConvertUnicode() throws Exception {
@@ -82,4 +98,5 @@ public class TestKoreanAnalyzer extends TestCase {
 			System.out.println(c+":"+Character.isLetterOrDigit(c));
 		}
 	}
+	
 }

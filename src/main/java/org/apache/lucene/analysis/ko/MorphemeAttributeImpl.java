@@ -29,14 +29,14 @@ public class MorphemeAttributeImpl extends AttributeImpl implements MorphemeAttr
 
     public KoreanToken getToken() {
         return this.koreanToken;
-    }
+    }            
 
 	@Override
 	public void reflectWith(AttributeReflector reflector) {
 		// TODO Auto-generated method stub
-		if(this.getToken()==null) return;
+		if(koreanToken==null ||reflector==null) return;
 		
-		reflector.reflect(CharTermAttribute.class, "term", this.getToken().getTerm());
-	    reflector.reflect(PositionIncrementAttribute.class, "positionIncrement", this.getToken().getPosInc());
+		reflector.reflect(CharTermAttribute.class, "term", koreanToken.getTerm());
+	    reflector.reflect(PositionIncrementAttribute.class, "positionIncrement", koreanToken.getPosInc());
 	}
 }
